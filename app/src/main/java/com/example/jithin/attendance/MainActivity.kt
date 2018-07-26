@@ -1,5 +1,6 @@
 package com.example.jithin.attendance
 
+import android.app.AlertDialog
 import android.app.DownloadManager
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -22,6 +23,13 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+
+        val pref = getSharedPreferences("event",0)
+        val token = pref.getString("access_token","")
+
+        if (token != "")
+            startActivity(intentFor<EventsActivity>())
+             finish()
     }
     fun loginBtnClicked(view: View){
         if(username.text.toString().isEmpty() || password.text.toString().isEmpty()){
@@ -53,14 +61,27 @@ class MainActivity : AppCompatActivity() {
                 when(response.code()){
                     200 ->{
                         if(response.body() != null){
+
                             val jsonResponse = JSONObject(response.body()!!.string())
                             val accessToken = jsonResponse.getString("access_token")
                             Log.d("ACCESS", accessToken)
 
-                            startActivity(intentFor<EventsActivity>())
+                            val pref = getSharedPreferences("event",0)
+                            val editor = pref.edit()
+                            editor.putString("access_token", accessToken)
+                            editor.apply()
+
+                            startActivity(intentFor<EventsActivity>()) //goes to the next start activity if logged in
                             finish()
                         }
                     }400 ->{
+                    AlertDialog.Builder(this@MainActivity)
+                            .setTitle("Error")
+                            .setMessage("An error occured")
+                            .setNeutralButton("ok") { dialog,which ->
+                                dialog.dismiss()
+                            }
+                            .show()
 
                 }
                 }

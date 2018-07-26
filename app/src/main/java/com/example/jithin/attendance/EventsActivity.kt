@@ -3,6 +3,8 @@ package com.example.jithin.attendance
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
+import android.view.Menu
+import android.view.MenuInflater
 
 import kotlinx.android.synthetic.main.activity_events.*
 
@@ -17,6 +19,13 @@ class EventsActivity : AppCompatActivity() {
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+
+     MenuInflater(this).inflate(R.menu.menu, menu)
+
+        return super.onCreateOptionsMenu(menu)
     }
 
 }
